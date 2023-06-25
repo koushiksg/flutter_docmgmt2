@@ -1,5 +1,9 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'enlist_sg.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginApp extends StatefulWidget {
   const LoginApp({super.key});
@@ -12,15 +16,37 @@ class _LoginAppState extends State<LoginApp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
-  String? _selectedDocumentType;
-  final List<String> _garden_name = [
-    'Garden A',
-    'Garden B',
-    'Garden c',
-    'Garden D'
-  ];
+  var dropdownvalue;
+   List<dynamic> users = [];
+     List<dynamic> categoryItemlist = [];
+
+  // final List<String> _garden_name = [
+  //   'Garden A',
+  //   'Garden B',
+  //   'Garden c',
+  //   'Garden D'
+  // ];
   @override
   Widget build(BuildContext context) {
+    fetchUsers();
+      
+      final List<dynamic> _garden_name = [
+       users[0]['LocName'], 
+    users[1]['LocName'],
+    users[2]['LocName'],
+    users[3]['LocName'],
+      ]
+      ;
+    //   final List<String> _garden_name = [
+        
+    // 'Garden A',
+    // 'Garden B',
+    // 'Garden c',
+    // 'Garden D',
+    //   ];
+  
+ 
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -31,22 +57,21 @@ class _LoginAppState extends State<LoginApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            DropdownButtonFormField<String>(
-              value: _selectedDocumentType,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedDocumentType = newValue;
-                });
-              },
-              items: _garden_name.map((documentType) {
-                return DropdownMenuItem<String>(
-                  value: documentType,
-                  child: Text(documentType),
+            DropdownButton(
+              hint: const Text('Choose Location'),
+              items: categoryItemlist.map((item) {
+              print(item['LocName']);
+                return DropdownMenuItem(
+                  value: item['LocId'],
+                  child: Text(item['LocName'].toString()),
                 );
               }).toList(),
-              decoration: const InputDecoration(
-                labelText: 'Garden Name',
-              ),
+              onChanged: (newVal) {
+                setState(() {
+                  dropdownvalue = newVal;
+                });
+              },
+              value: dropdownvalue,
             ),
             const SizedBox(height: 16.0),
             TextFormField(
@@ -84,6 +109,10 @@ class _LoginAppState extends State<LoginApp> {
           ],
         ),
       ),
+            floatingActionButton: FloatingActionButton(
+        onPressed: fetchUsers,
+      ),
+
     );
   }
 
@@ -104,4 +133,38 @@ class _LoginAppState extends State<LoginApp> {
       },
     );
   }
+    void fetchUsers() async {
+    print('fetch started');
+    const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
+    //const url = 'http://rcssoft.in/DocMgmt/api/Location?LocId=0,LocName=';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    final body = response.body;
+    setState(() {
+      users = jsonDecode(body);
+    });
+    print('fetch complete');
+                //print (users[0]['LocName']);
+  }
+
+    Future getAllCategory() async {
+    print('fetch started');
+    //const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
+    const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    final body = response.body;
+    setState(() {
+      categoryItemlist = jsonDecode(body);
+    });
+    print('fetch complete');
+              print(categoryItemlist[0]['LocName']);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAllCategory();
+  }
+
 }
