@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_docmgmt/screen/login_new.dart';
 import 'package:flutter_docmgmt/screen/login_sg.dart';
 void main(){
 

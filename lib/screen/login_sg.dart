@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'enlist_sg.dart';
 import 'dart:convert';
@@ -15,38 +13,11 @@ class LoginApp extends StatefulWidget {
 class _LoginAppState extends State<LoginApp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _errorMessage = '';
   var dropdownvalue;
-   List<dynamic> users = [];
-     List<dynamic> categoryItemlist = [];
-
-  // final List<String> _garden_name = [
-  //   'Garden A',
-  //   'Garden B',
-  //   'Garden c',
-  //   'Garden D'
-  // ];
+  var _errorMessage;
+  List<dynamic> categoryItemlist = [];
   @override
   Widget build(BuildContext context) {
-    fetchUsers();
-      
-      final List<dynamic> _garden_name = [
-       users[0]['LocName'], 
-    users[1]['LocName'],
-    users[2]['LocName'],
-    users[3]['LocName'],
-      ]
-      ;
-    //   final List<String> _garden_name = [
-        
-    // 'Garden A',
-    // 'Garden B',
-    // 'Garden c',
-    // 'Garden D',
-    //   ];
-  
- 
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -60,7 +31,7 @@ class _LoginAppState extends State<LoginApp> {
             DropdownButton(
               hint: const Text('Choose Location'),
               items: categoryItemlist.map((item) {
-              print(item['LocName']);
+                print(item['LocName']);
                 return DropdownMenuItem(
                   value: item['LocId'],
                   child: Text(item['LocName'].toString()),
@@ -109,10 +80,6 @@ class _LoginAppState extends State<LoginApp> {
           ],
         ),
       ),
-            floatingActionButton: FloatingActionButton(
-        onPressed: fetchUsers,
-      ),
-
     );
   }
 
@@ -133,22 +100,8 @@ class _LoginAppState extends State<LoginApp> {
       },
     );
   }
-    void fetchUsers() async {
-    print('fetch started');
-    const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
-    //const url = 'http://rcssoft.in/DocMgmt/api/Location?LocId=0,LocName=';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    final body = response.body;
-    setState(() {
-      users = jsonDecode(body);
-    });
-    print('fetch complete');
-                //print (users[0]['LocName']);
-  }
 
-    Future getAllCategory() async {
-    print('fetch started');
+  Future getAllCategory() async {
     //const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
     const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
     final uri = Uri.parse(url);
@@ -157,8 +110,6 @@ class _LoginAppState extends State<LoginApp> {
     setState(() {
       categoryItemlist = jsonDecode(body);
     });
-    print('fetch complete');
-              print(categoryItemlist[0]['LocName']);
   }
 
   @override
@@ -166,5 +117,4 @@ class _LoginAppState extends State<LoginApp> {
     super.initState();
     getAllCategory();
   }
-
 }
