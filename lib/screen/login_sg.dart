@@ -13,6 +13,7 @@ class LoginApp extends StatefulWidget {
 class _LoginAppState extends State<LoginApp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   var dropdownvalue;
   var _errorMessage;
   List<dynamic> categoryItemlist = [];
@@ -31,7 +32,6 @@ class _LoginAppState extends State<LoginApp> {
             DropdownButton(
               hint: const Text('Choose Location'),
               items: categoryItemlist.map((item) {
-                print(item['LocName']);
                 return DropdownMenuItem(
                   value: item['LocId'],
                   child: Text(item['LocName'].toString()),
@@ -60,7 +60,7 @@ class _LoginAppState extends State<LoginApp> {
               onPressed: () {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-
+                 print(dropdownvalue);
                 if (username == 'admin' && password == 'admin') {
                   Navigator.push(
                     context,
@@ -71,6 +71,8 @@ class _LoginAppState extends State<LoginApp> {
                   showAlertDialog(context);
                   setState(() {
                     _errorMessage = 'Invalid username or password';
+                    
+                      
                   });
                 }
                 // Perform signup logic here
