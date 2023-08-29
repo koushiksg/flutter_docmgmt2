@@ -16,6 +16,7 @@ class _LoginAppState extends State<LoginApp> {
 
   var dropdownvalue;
   var _errorMessage;
+  int userlen = 0;
   List<dynamic> categoryItemlist = [];
   List<dynamic> userlist = [];
   @override
@@ -62,11 +63,10 @@ class _LoginAppState extends State<LoginApp> {
                 //getUser();
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                 //print(dropdownvalue);
-                //getUser();
-            //final int IdUsr = Userlist[0]['IdUsr'];
-            print (userlist.length);
-                if (username == 'admin' && password == 'admin') {
+                getUser();
+                print("List $userlist");
+//                if (username == 'admin' && password == 'admin') {
+                if (userlen == 1) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -76,7 +76,6 @@ class _LoginAppState extends State<LoginApp> {
                   showAlertDialog(context);
                   setState(() {
                     _errorMessage = 'Invalid username or password';
-                      
                   });
                 }
                 // Perform signup logic here
@@ -109,7 +108,7 @@ class _LoginAppState extends State<LoginApp> {
 
   Future getAllCategory() async {
     //const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
-    const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';    
+    const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
@@ -121,24 +120,20 @@ class _LoginAppState extends State<LoginApp> {
   Future getUser() async {
     //const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
     int LocId;
-    if (dropdownvalue != null)
-    {
-LocId = dropdownvalue;
-    }
-     else
-     {
+    if (dropdownvalue != null) {
+      LocId = dropdownvalue;
+    } else {
       LocId = 0;
-     }
-    final url = 'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=&LocId=$LocId';
+    }
+    final url =
+        'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=&LocId=$LocId';
     //const url = 'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=&LocId=0';
-    print(url);
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
     setState(() {
-     userlist = jsonDecode(body);
+      userlist = jsonDecode(body);
     });
-    //print (userlist.length);
   }
 
   @override
