@@ -59,32 +59,27 @@ class _LoginAppState extends State<LoginApp> {
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                //FutureBuilder(
-                    //future: getUser(),
-                    //builder: (context, AsyncSnapshot snapshot) {
-                      //print("List $userlist");
-                      //return const Text("No widget to build");
-                      //if (snapshot.hasError) {
-                      //  return const Text('error');
-                      //}
-                      //if (snapshot.data != null) {return const Text('error');}
-                    //});
-                //print("List $userlist");
-                //getUser();
+                
+                await getUser();
+                print("List $userlist");
+                //print(userlist[0]["UserName"]);
+                userlen = userlist.length;
+                //userlen = 1;
 //                if (username == 'admin' && password == 'admin') {
-                final Future user2list = getUser();
-                print(user2list);
-                if (userlen == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DocumentUploadForm()),
-                  );
+                if (userlen == 1 && username == userlist[0]["UserName"] && password == 'Bors' ) {
+                  print('ok');
+                  //const DocumentUploadForm();
+                  //Navigator.push(
+                  //  context,
+                  //  MaterialPageRoute(
+                  //      builder: (context) => const DocumentUploadForm()),
+                  //);
                 } else {
-                  showAlertDialog(context);
+                  //showAlertDialog(context);
+                  print('Not ok');
                   setState(() {
                     _errorMessage = 'Invalid username or password';
                   });
@@ -129,25 +124,28 @@ class _LoginAppState extends State<LoginApp> {
   }
 
   Future getUser() async {
-    //const url = 'http://rcssoft.in/DocMgmt/api/Location/?LocId=0&LocName=';
     int LocId;
     if (dropdownvalue != null) {
       LocId = dropdownvalue;
     } else {
       LocId = 0;
     }
+    final usrname = _usernameController.text;
     final url =
-        'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=&LocId=$LocId';
+        'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=$usrname&LocId=$LocId';
     //const url = 'http://rcssoft.in/DocMgmt/api/User/?IdUsr=0&UserName=&LocId=0';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
-    print(url);
-    setState(() {
-      userlist = jsonDecode(body);
-    });
-  return Future.delayed(const Duration(seconds: 2),
-      () => throw Exception('Logout failed: user ID is invalid'));
+    if (jsonDecode(body) != null) {
+      setState(() {
+        userlist = jsonDecode(body);
+      });
+    } else {
+      setState(() {
+        userlist.clear();
+      });
+    }
   }
 
   @override
