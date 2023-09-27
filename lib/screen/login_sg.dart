@@ -60,12 +60,23 @@ class _LoginAppState extends State<LoginApp> {
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                //getUser();
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                getUser();
-                print("List $userlist");
+                //FutureBuilder(
+                    //future: getUser(),
+                    //builder: (context, AsyncSnapshot snapshot) {
+                      //print("List $userlist");
+                      //return const Text("No widget to build");
+                      //if (snapshot.hasError) {
+                      //  return const Text('error');
+                      //}
+                      //if (snapshot.data != null) {return const Text('error');}
+                    //});
+                //print("List $userlist");
+                //getUser();
 //                if (username == 'admin' && password == 'admin') {
+                final Future user2list = getUser();
+                print(user2list);
                 if (userlen == 1) {
                   Navigator.push(
                     context,
@@ -131,15 +142,18 @@ class _LoginAppState extends State<LoginApp> {
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
+    print(url);
     setState(() {
       userlist = jsonDecode(body);
     });
+  return Future.delayed(const Duration(seconds: 2),
+      () => throw Exception('Logout failed: user ID is invalid'));
   }
 
   @override
   void initState() {
     super.initState();
     getAllCategory();
-    getUser();
+    //getUser();
   }
 }
