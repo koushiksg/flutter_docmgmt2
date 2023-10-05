@@ -62,27 +62,26 @@ class _LoginAppState extends State<LoginApp> {
               onPressed: () async {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                
+
                 await getUser();
                 print("List $userlist");
                 //print(userlist[0]["UserName"]);
                 userlen = userlist.length;
+
                 //userlen = 1;
 //                if (username == 'admin' && password == 'admin') {
-                if (userlen == 1 && username == userlist[0]["UserName"] && password == 'Bors' ) {
+                if (userlen == 1 &&
+                    username == userlist[0]["UserName"] &&
+                    password == userlist[0]["UserPass"]) {
                   print('ok');
-                  //const DocumentUploadForm();
-                  //Navigator.push(
-                  //  context,
-                  //  MaterialPageRoute(
-                  //      builder: (context) => const DocumentUploadForm()),
-                  //);
+                  DocCall();
                 } else {
-                  //showAlertDialog(context);
-                  print('Not ok');
-                  setState(() {
-                    _errorMessage = 'Invalid username or password';
-                  });
+                  invaliddoc();
+//                  showAlertDialog(context);
+//                  print('Not ok');
+//                  setState(() {
+//                    _errorMessage = 'Invalid username or password';
+//                  });
                 }
                 // Perform signup logic here
               },
@@ -153,5 +152,19 @@ class _LoginAppState extends State<LoginApp> {
     super.initState();
     getAllCategory();
     //getUser();
+  }
+
+  void DocCall() {
+    const DocumentUploadForm();
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const DocumentUploadForm()));
+  }
+
+  void invaliddoc() {
+    showAlertDialog(context);
+    print('Not ok');
+    setState(() {
+      _errorMessage = 'Invalid username or password';
+    });
   }
 }
