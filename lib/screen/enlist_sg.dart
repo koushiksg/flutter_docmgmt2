@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class DocumentUploadForm extends StatefulWidget {
   const DocumentUploadForm({super.key});
@@ -16,6 +19,9 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
   final TextEditingController _documentNumberController =
       TextEditingController();
   final TextEditingController _remarksController = TextEditingController();
+
+  var dropdownvalue;
+  List<dynamic> doctypelist = [];
 
   final List<String> _documentTypes = [
     'Passport',
@@ -100,10 +106,11 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
                   _selectedDocumentType = newValue;
                 });
               },
-              items: _documentTypes.map((documentType) {
+              items: doctypelist.map((documentType) {
                 return DropdownMenuItem<String>(
-                  value: documentType,
-                  child: Text(documentType),
+                  value: documentType['DocTypeId'].toString(),
+                   
+                  child: Text(documentType['DocTypeName'].toString()),
                 );
               }).toList(),
               decoration: const InputDecoration(
@@ -163,4 +170,30 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    getDocType();
+  }
+
+     Future getDocType() async {
+    
+    const url =
+        'http://rcssoft.in/DocMgmt/api/DocType/?DocTypeId=0&DocTypeName=';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    final body = response.body;
+    if (jsonDecode(body) != null) {
+      setState(() {
+        doctypelist = jsonDecode(body);
+      });
+    } else {
+      setState(() {
+        doctypelist.clear();
+      });
+    }
+  }
+
+
 }
