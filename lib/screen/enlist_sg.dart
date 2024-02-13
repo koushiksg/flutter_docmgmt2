@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class DocumentUploadForm extends StatefulWidget {
   const DocumentUploadForm({super.key});
 
@@ -109,7 +108,6 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
               items: doctypelist.map((documentType) {
                 return DropdownMenuItem<String>(
                   value: documentType['DocTypeId'].toString(),
-                   
                   child: Text(documentType['DocTypeName'].toString()),
                 );
               }).toList(),
@@ -162,7 +160,9 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
               ),
               itemCount: _imageFiles.length,
               itemBuilder: (BuildContext context, int index) {
-                return Image.file(_imageFiles[index]);
+                //return Image.file(_imageFiles[index]);
+                //return Image.network("https://picsum.photos/250?image=9");
+                return Image.network("E://DocMgmt/Img/Img1.jpg");
               },
             ),
           ],
@@ -177,8 +177,7 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
     getDocType();
   }
 
-     Future getDocType() async {
-    
+  Future getDocType() async {
     const url =
         'http://rcssoft.in/DocMgmt/api/DocType/?DocTypeId=0&DocTypeName=';
     final uri = Uri.parse(url);
@@ -194,6 +193,4 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
       });
     }
   }
-
-
 }
