@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButton(
-              hint: Text('hooseNumber'),
+              hint: const Text('hooseNumber'),
               items: categoryItemlist.map((item) {
               print(item['LocName']);
                 return DropdownMenuItem(

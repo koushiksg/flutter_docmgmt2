@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'enlist_sg.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'image_upload.dart';
 
 class LoginApp extends StatefulWidget {
   const LoginApp({super.key});
@@ -156,8 +157,11 @@ class _LoginAppState extends State<LoginApp> {
 
   void DocCall() {
     const DocumentUploadForm();
-    Navigator.push(context,
+    //ImageUploadScreen();
+    Navigator.push(
+        context,
         MaterialPageRoute(builder: (context) => const DocumentUploadForm()));
+        //MaterialPageRoute(builder: (context) => ImageUploadScreen()));
   }
 
   void invaliddoc() {

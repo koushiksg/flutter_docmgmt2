@@ -4,6 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'dart:typed_data';
+import 'dart:html' as html;
+import 'package:http_parser/http_parser.dart';
+
 class DocumentUploadForm extends StatefulWidget {
   const DocumentUploadForm({super.key});
 
@@ -51,6 +55,29 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
         _imageFiles
             .addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
       }
+    });
+  }
+
+  List<int>? _selectedFile;
+  Uint8List? _bytesData;
+  startWebFilePicker() async {
+    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.multiple = true;
+    uploadInput.draggable = true;
+    uploadInput.click();
+    uploadInput.onChange.listen((event) {
+      final files = uploadInput.files;
+      final file = files![0];
+      final reader = html.FileReader();
+      reader.onLoadEnd.listen((event) {
+        setState(() {
+          _bytesData =
+              Base64Decoder().convert(reader.result.toString().split(",").last);
+          _selectedFile = _bytesData;
+          
+        });
+      });
+      reader.readAsDataUrl(file);
     });
   }
 
@@ -131,14 +158,15 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _pickImageFromCamera,
-              child: const Text('Take a Photo'),
+onPressed: () {
+                  startWebFilePicker();
+                },
+                              child: const Text('Upload Photo'),
             ),
-            const SizedBox(height: 8.0),
-            ElevatedButton(
-              onPressed: _pickImageFromGallery,
-              child: const Text('Select from Gallery'),
-            ),
+                          _bytesData != null
+                  ? Image.memory(_bytesData!, width: 200, height: 200)
+                  : Container(),
+
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _submitForm,
@@ -159,10 +187,12 @@ class _DocumentUploadFormState extends State<DocumentUploadForm> {
                 mainAxisSpacing: 8.0,
               ),
               itemCount: _imageFiles.length,
+              //itemCount: _selectedFile.length,
+
               itemBuilder: (BuildContext context, int index) {
                 //return Image.file(_imageFiles[index]);
-                //return Image.network("https://picsum.photos/250?image=9");
-                return Image.network("E://DocMgmt/Img/Img1.jpg");
+                return Image.network("https://picsum.photos/250?image=9");
+                //return Image.network("E://DocMgmt/Img/Img1.jpg");
               },
             ),
           ],
