@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 import 'dart:html' as html;
+import 'package:file_picker/file_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:carousel_slider/carousel_slider.dart';
 class ImageUploadScreen extends StatefulWidget {
   @override
   State<ImageUploadScreen> createState() => _ImageUploadScreenState();
@@ -13,6 +14,9 @@ class ImageUploadScreen extends StatefulWidget {
 class _ImageUploadScreenState extends State<ImageUploadScreen> {
   List<int>? _selectedFile;
   Uint8List? _bytesData;
+//  String selectfile;
+//  Uint8List selectedImageInBytes;
+
   startWebFilePicker() async {
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
     uploadInput.multiple = true;
@@ -30,9 +34,22 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
         });
       });
       reader.readAsDataUrl(file);
+      final mlen = files.length;
+      for (var i = 0; i < mlen; i++) {
+        print(files[i].name);
+      }
     });
   }
 
+//_selectFile(bool imageFrom) async {
+//  FilePickerResult fileResult = await FilePicker.platform.pickFiles();
+//  if (fileResult != null) {
+//    setState(() {
+//      selectfile = fileResult.files.first.name;
+//
+//    });
+//  }
+//}
   Future uploadImage() async {
     var url = Uri.parse("uri");
   }
@@ -63,9 +80,31 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
               Divider(
                 color: Colors.teal,
               ),
-              _bytesData != null
-                  ? Image.memory(_bytesData!, width: 200, height: 200)
-                  : Container(),
+              //_bytesData != null
+              //    ? Image.memory(_bytesData!, width: 200, height: 200)
+              //    :
+                  //: Container(),
+                 //_bytesData != null
+                  //?
+                  _bytesData != null
+                  ? CarouselSlider(
+  options: CarouselOptions(height: 400.0),
+  items:_selectedFile!.map((i) {
+    return Builder(
+      builder: (BuildContext context) {
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          decoration: BoxDecoration(
+            color: Colors.amber
+          ),
+//child: Image.memory(_bytesData!, width: 200, height: 200)
+child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+        );
+      },
+    );
+  }).toList(),
+):
               MaterialButton(
                 color: Colors.purple,
                 elevation: 8,

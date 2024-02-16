@@ -156,12 +156,12 @@ class _LoginAppState extends State<LoginApp> {
   }
 
   void DocCall() {
-    const DocumentUploadForm();
-    //ImageUploadScreen();
+    //const DocumentUploadForm();
+    ImageUploadScreen();
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const DocumentUploadForm()));
-        //MaterialPageRoute(builder: (context) => ImageUploadScreen()));
+        //MaterialPageRoute(builder: (context) => const DocumentUploadForm()));
+        MaterialPageRoute(builder: (context) => ImageUploadScreen()));
   }
 
   void invaliddoc() {

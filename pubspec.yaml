@@ -38,6 +38,7 @@ dependencies:
   http: ^1.1.0
   image_picker: ^0.8.9
   file_picker: ^6.1.1
+  carousel_slider: ^4.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
